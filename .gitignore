@@ -3,3 +3,4 @@
 !.env.example
 venv/
 .venv/
+static/pdf/
