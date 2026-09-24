@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Translation and Sending</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <script>
+    window.onload = function () {
+      // click 이벤트 설정
+      send.addEventListener("click", function () {
+        //form data  가져오기, 메일제목, 받는 이메일 주소, 메일내용
+        let subject = document.getElementById('subject').value;
+        let recipient_email = document.getElementById('recipient_email').value;
+        let message = document.getElementById('message').value;
+
+        console.log(subject, recipient_email, message)
+        //처리중 이미지 보여주기
+        document.getElementById("processing").innerHTML =
+          '<img src="/static/images/progress.gif" style="width: 3%; margin-top: 10px;">';
+
+        // 서버와 비동기 통신 (폼데이터 전달 => 결과 받아서 처리)
+        fetch("http://localhost:5000/proc", {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            "subject": subject,
+            "recipient_email": recipient_email,
+            "message": message
+          })
+        })
+          .then((response) => response.json())
+          .then(data => {
+            document.getElementById('processing').innerHTML = '';
+            if (data.result === true) {
+              alert('메일 전송이 완료되었습니다.')
+            } else {
+              alert('메일 전송에 실패했습니다.')
+            }
+          })
+      }); //클릭 이벤트 설정 end
+    }; //페이지로드 end
+  </script>
+</head>
+
+<body>
+  <div id="result" class="container">
+    <h1 class="mt-5">Send Translated Email</h1>
+    <form method="POST" action="/">
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" class="form-control" id="subject" placeholder="Enter subject" />
+      </div>
+      <div class="form-group">
+        <label for="recipient_email">Recipient Email</label>
+        <input type="email" class="form-control" id="recipient_email" value="termi274@gmail.com" />
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea class="form-control" id="message" rows="6" placeholder="Enter message (Korean or English)">
+즐거운 주말 입니다.
+운동을 열심히 하세요~
+</textarea>
+      </div>
+      <button type="button" id="send" class="btn btn-primary">
+        Send Email
+      </button>
+      <span id="processing"></span>
+    </form>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+from langchain_ollama import ChatOllama
+from langchain.agents import create_agent
+
+from tools.calculator import calculator
+
+
+def create_local_agent():
+
+    llm = ChatOllama(
+        model="qwen3.5:9b",
+        temperature=0
+    )
+
+    tools = [
+        calculator
+    ]
+
+    agent = create_agent(
+        model=llm,
+        tools=tools
+    )
+
+    return agent

@@ -1,0 +1,11 @@
+{
+    "description": "PDF, Word, TXT 등 문서를 읽고 핵심 내용을 한국어로 요약하는 Agent",
+    "prompt": "사용자의 질문에 한국어로 답변하는 AI입니다. 계산 결과는 불필요한 한자나 수식어 없이 다음 형식으로만 간단히 답하십시오.\n\n[답변 형식 예시]\n- 질문: 5 * 43\n- 답변: 5 * 43 = 215 입니다.\n- 질문: 123 + 456 계산해줘\n- 답변: 123 + 456 = 579 입니다.\n\n계산 시 반드시 calculator Tool을 호출하고, 결과는 위 템플릿('= 결과 입니다')으로만 출력하십시오.",
+    "tools": [
+        "read_text_file",
+        "read_pdf_file",
+        "write_text_file"
+    ],
+    "model": "qwen2.5:3b",
+    "maxTurns": 5
+}

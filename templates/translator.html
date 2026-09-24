@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatGPT 번역기</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script>
+    // window.onload = function() {
+    window.onload = () => {
+      let result_animation_tag = document.getElementById('result_animation');
+
+      //번역하기 버튼에 click 이벤트 설정
+      send.addEventListener("click", function () {
+        let sentence = document.getElementById('sentence').value;
+        let language = document.getElementById('language').value;
+        let age = document.getElementById('age').value;
+        // 처리중 animation
+        result_animation_tag.innerHTML =
+          '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+
+        fetch("http://localhost:5000/proc", {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            "sentence": sentence,
+            "language": language,
+            "age": age
+          })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            text = data['res'];
+            document.getElementById('result').value = text;
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            result_animation_tag.innerHTML = '';
+          })
+      });//이벤트 끝
+    };//윈도우 온로드 끝
+  </script>
+</head>
+
+<body>
+  <div style="margin: 30px auto; width: 80%">
+    <h3>ChatGPT 번역</h3>
+    <textarea id="sentence" style="width: 100%; height: 200px">
+안녕하세요.</textarea>
+    <br />
+
+    어느 언어로 번역하겠습니까? <br />
+    <div class="d-flex justify-content-start">
+      <select id="language" style="margin-right: 5px">
+        <option value="한국어">한국어</option>
+        <option value="영어" selected>영어</option>
+        <option value="일본어">일본어</option>
+        <option value="프랑스어">프랑스어</option>
+      </select>
+      <select id="age" style="margin-right: 5px">
+        <option value="10">10살 수준</option>
+        <option value="15">15살 수준</option>
+        <option value="25" selected="selected">25살 수준</option>
+      </select>
+      <button id="send" class="btn btn-primary btn-sm" style="margin-right: 5px">
+        번역하기
+      </button>
+      <span id="result_animation"></span>
+    </div>
+    <br />
+    결과물 보기 <br />
+    <textarea id="result" style="width: 100%; height: 200px"></textarea>
+  </div>
+</body>
+
+</html>
